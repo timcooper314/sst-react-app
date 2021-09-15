@@ -1,10 +1,11 @@
 import Header from './components/Header'
+import Tracks from './components/Tracks'
 
 const App = () => {
   return (
-    <div className="App">
+    <div className="container">
       <Header/>
-      <h1>Crispy</h1>
+      <Tracks/>
     </div>
   );
 }
