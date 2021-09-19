@@ -2,11 +2,11 @@
 import os
 
 from aws_cdk import core as cdk
-from backend.backend_stack import BackendStack
+from infrastructure.infrastructure_stack import InfrastructureStack
 
 
 app = cdk.App()
-BackendStack(app, "BackendStack",
+InfrastructureStack(app, "InfrastructureStack",
              env=cdk.Environment(account=os.getenv('CDK_DEFAULT_ACCOUNT'),
                                  region=os.getenv('CDK_DEFAULT_REGION')),
     )
