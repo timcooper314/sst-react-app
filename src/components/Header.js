@@ -2,7 +2,7 @@ import Button from './Button'
 
 const Header = () => {
     const onClick = () => {
-        console.log('click')
+        console.log(process.env.REACT_APP_HELLO_WORLD_ENDPOINT)
     }
     return (
     <header>

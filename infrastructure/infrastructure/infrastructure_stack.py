@@ -11,12 +11,12 @@ class InfrastructureStack(cdk.Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         crispy_umbrella_bucket = s3.Bucket(self, "crispy-umbrella",
-                                                public_read_access=True,
+                                                public_read_access=True,  # Might need to be more secure...
                                                 website_index_document="index.html")
 
-        s3_deployment.BucketDeployment(self, "deployStaticWebsite",
-                                       sources=[s3_deployment.Source.asset("../build")],
-                                       destination_bucket=crispy_umbrella_bucket)
+        # s3_deployment.BucketDeployment(self, "deployStaticWebsite",
+        #                                sources=[s3_deployment.Source.asset("../build")],
+        #                                destination_bucket=crispy_umbrella_bucket)
 
         # API Gateway and Lambda:
         api_endpoint_lambda = lambda_.Function(self, "api-endpoint-lambda",
@@ -25,17 +25,22 @@ class InfrastructureStack(cdk.Stack):
                                                code=lambda_.Code.from_asset("./infrastructure/"))
 
         api = apigateway.RestApi(self, "hello-world-api",
-                                 rest_api_name="Hello World")
+                                 rest_api_name="Hello World",
+                                 endpoint_export_name="helloworldurl")
 
         get_api_integration = apigateway.LambdaIntegration(api_endpoint_lambda,
                                                            request_templates={"application/json": '{"statusCode": "200"}'})
         api.root.add_method("GET", get_api_integration)
-
-        cdk.CfnOutput(self, "crispy_umbrella_bucket",
-                      value=crispy_umbrella_bucket.bucket_name)
 
         # Connect function to API gateway
         hello = api.root.add_resource("{id}")
         get_hello_integration = apigateway.LambdaIntegration(api_endpoint_lambda)
 
         hello.add_method("GET", get_hello_integration)
+
+        # Output parameters:
+        cdk.CfnOutput(self, "crispy_umbrella_bucket",
+                      value=crispy_umbrella_bucket.bucket_name)
+
+        cdk.CfnOutput(self, "helloworldurl",
+                      value=api.url)
