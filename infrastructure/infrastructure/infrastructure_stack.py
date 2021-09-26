@@ -28,7 +28,7 @@ class InfrastructureStack(cdk.Stack):
             handler="api_endpoint_lambda.lambda_handler",
             code=lambda_.Code.from_asset("./infrastructure/"),
         )
-
+        # TODO: grant s3 read access to lambda
         api = apigateway.RestApi(
             self,
             "tracks-data-api",
@@ -55,5 +55,4 @@ class InfrastructureStack(cdk.Stack):
         cdk.CfnOutput(
             self, "crispy_umbrella_bucket", value=crispy_umbrella_bucket.bucket_name
         )
-
         cdk.CfnOutput(self, "tracksdataurl", value=api.url)
