@@ -1,14 +1,14 @@
 import Button from './Button'
 
-const Header = () => {
-    const onClick = () => {
-        console.log(process.env.REACT_APP_HELLO_WORLD_ENDPOINT)
-    }
+const Header = ({ onAdd, showAdd }) => {
     return (
     <header>
         <h1>Umbrella</h1>
-        <Button colour='green' text="Click a button"
-        onClick={onClick}/>
+        <Button 
+            colour={showAdd ? 'red' : 'green'} 
+            text={showAdd ? "Hide Tracks" : "Get Tracks"}
+            onClick={onAdd}
+        />
     </header>
     )
 }
