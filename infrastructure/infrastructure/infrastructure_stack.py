@@ -3,6 +3,7 @@ from aws_cdk import aws_s3 as s3
 from aws_cdk import aws_lambda as lambda_
 from aws_cdk import aws_s3_deployment as s3_deployment
 from aws_cdk import aws_apigateway as apigateway
+from aws_cdk import aws_iam as iam
 
 
 class InfrastructureStack(cdk.Stack):
@@ -21,12 +22,28 @@ class InfrastructureStack(cdk.Stack):
         #                                destination_bucket=crispy_umbrella_bucket)
 
         # API Gateway and Lambda:
+        lambda_role = iam.Role(
+            self,
+            "ApiLambdaRole",
+            assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
+        )
+        # TODO: staging data bucket as env var?
+        staging_data_bucket_arn = cdk.Fn.import_value("stagingdatabucketarn")
+        lambda_role.add_to_policy(
+            iam.PolicyStatement(
+                effect=iam.Effect.ALLOW,
+                resources=[f"{staging_data_bucket_arn}/*"],
+                actions=["s3:Get*", "s3:List*"],
+            )
+        )
+
         api_endpoint_lambda = lambda_.Function(
             self,
             "api-endpoint-lambda",
             runtime=lambda_.Runtime.PYTHON_3_8,
             handler="api_endpoint_lambda.lambda_handler",
             code=lambda_.Code.from_asset("./infrastructure/"),
+            role=lambda_role,
         )
         # TODO: grant s3 read access to lambda
         api = apigateway.RestApi(
@@ -53,6 +70,8 @@ class InfrastructureStack(cdk.Stack):
 
         # Output parameters:
         cdk.CfnOutput(
-            self, "crispy_umbrella_bucket", value=crispy_umbrella_bucket.bucket_name
+            self,
+            "crispy_umbrella_bucket",
+            value=crispy_umbrella_bucket.bucket_name,
         )
         cdk.CfnOutput(self, "tracksdataurl", value=api.url)

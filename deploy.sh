@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#export AWS_PROFILE=
-#export CDK_DEFAULT_ACCOUNT=
+export AWS_PROFILE=
+export CDK_DEFAULT_ACCOUNT=
 export CDK_DEFAULT_REGION=ap-southeast-2
 
 echo "***Installing dependencies...***"
@@ -13,7 +13,7 @@ cdk synth
 cdk deploy
 
 stack_name="InfrastructureStack"
-crispyUmbrellaBucketName=$(aws --output text describe-stacks --stack-name $stack_name --query "Stacks[].Outputs[?OutputKey=='crispyumbrellabucket'].OutputValue[]")
+crispyUmbrellaBucketName=$(aws --output text cloudformation describe-stacks --stack-name $stack_name --query "Stacks[].Outputs[?OutputKey=='crispyumbrellabucket'].OutputValue[]")
 tracksDataEndpointUrl=$(aws --output text cloudformation describe-stacks --stack-name $stack_name --query "Stacks[].Outputs[?OutputKey=='tracksdataurl'].OutputValue[]")
 
 echo "***Creating production build of react app...***"
