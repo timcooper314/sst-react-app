@@ -24,6 +24,7 @@ setuptools.setup(
         "aws-cdk.aws_s3_deployment",
         "aws-cdk.aws_lambda",
         "aws-cdk.aws_apigateway",
+        "aws-cdk.aws_iam",
     ],
 
     python_requires=">=3.6",

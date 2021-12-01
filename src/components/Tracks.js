@@ -1,14 +1,13 @@
-import React from 'react'
 import Track from './Track'
 
 
 const Tracks = ({tracks}) => {
     return (
-        <>
-            {tracks.map((track) => (
-                <Track key={track.id} track={track}/>
-            ))}
-        </>
+    <>
+        {tracks.map((track) => (
+            <Track key={track.id} track={track}/>
+        ))}
+    </>
     )
 }
 
