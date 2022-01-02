@@ -1,7 +1,6 @@
-import pytest
 from pytest import fixture
 from unittest.mock import MagicMock
-from infrastructure.infrastructure.api_endpoint_lambda import GetTracksData
+from src.get_tracks import GetTracksData
 
 
 @fixture

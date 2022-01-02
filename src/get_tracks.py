@@ -1,3 +1,4 @@
+import os
 import json
 from datetime import datetime
 import boto3
@@ -6,9 +7,7 @@ import boto3
 class GetTracksData:
     def __init__(self):
         self.s3 = boto3.client("s3")
-        self.tracks_data_bucket_name = (
-            "datalakestack-stagingdataec9fbd02-ejw4ydpkx3ap"  # os.getenv()
-        )
+        self.tracks_data_bucket_name = os.getenv("STAGING_BUCKET_NAME")
 
     def get_s3_key(self):
         datetime_now = datetime.now().strftime("%Y%m%d")
@@ -36,8 +35,12 @@ class GetTracksData:
         return processed_data
 
 
-def lambda_handler(event, context):
+def main(event, context):
     tracks_data = GetTracksData().get_tracks_data()
+    # tracks_data = [
+    #             {"id": 1, "artist": "artist_x", "track": "track_x"},
+    #             {"id": 2, "artist": "artist_y", "track": "track_y"},
+    #         ]
     return {
         "statusCode": 200,
         "headers": {
@@ -47,9 +50,5 @@ def lambda_handler(event, context):
         },
         "body": json.dumps(
             tracks_data
-            # [
-            #     {"id": 1, "artist": "artist_x", "track": "track_x"},
-            #     {"id": 2, "artist": "artist_y", "track": "track_y"},
-            # ]
         ),
     }

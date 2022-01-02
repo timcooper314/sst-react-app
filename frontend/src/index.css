@@ -1,5 +1,5 @@
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: sans-serif;
 }
 
 .btn {
@@ -13,7 +13,7 @@ body {
   cursor: pointer;
   text-decoration: none;
   font-size: 15px;
-  font-family: inherit;
+  font-family: sans-serif;
 }
 
 code {
@@ -29,11 +29,12 @@ code {
   border: 1px solid steelblue;
   padding: 30px;
   border-radius: 5px;
+  background: #0489C1
 }
 
 .track {
   background: #f4f4f4;
   margin: 5px;
-  padding: 10px 20px;
+  padding: 2px 20px;
   cursor: pointer;
 }
