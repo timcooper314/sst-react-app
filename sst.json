@@ -1,5 +1,5 @@
 {
-  "name": "sst-app",
+  "name": "sst-react-app",
   "region": "ap-southeast-2",
   "main": "stacks/index.js"
 }

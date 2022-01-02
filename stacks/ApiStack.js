@@ -1,5 +1,5 @@
 import * as sst from "@serverless-stack/resources";
-import * as iam from "@aws-cdk/aws-iam";
+// import * as iam from "@aws-cdk/aws-iam";
 
 export default class InfrastructureStack extends sst.Stack {
     // Public references:
@@ -8,24 +8,26 @@ export default class InfrastructureStack extends sst.Stack {
     constructor(scope, id, props) {
         super(scope, id, props);
 
+        const { bucket } = props;
+
         // API resources: (cors enabled by default)
         this.api = new sst.Api(this, "Api", {
             defaultFunctionProps: {
                 srcPath: "src",
                 environment: {
-                    STAGING_BUCKET_NAME: "stagings"
+                    STAGING_BUCKET_NAME: bucket.bucketName,  // process.env.STAGING_BUCKET_NAME,
                 },
             },
             routes: {
                 "GET /tracks": "get_tracks.main",
             }
         });
-        this.api.attachPermissions([
-            new iam.PolicyStatement({
-                actions: ["s3:*"],
-                effect: iam.Effect.ALLOW,
-                resources: ["arn:aws:s3:::datalakestack-stagingdataec9fbd02-ejw4ydpkx3ap/*"],
-            }),
+        this.api.attachPermissions([bucket
+            // new iam.PolicyStatement({
+            //     actions: ["s3:*"],
+            //     effect: iam.Effect.ALLOW,
+            //     resources: ["arn:aws:s3:::datalakestack-stagingdataec9fbd02-ejw4ydpkx3ap/*"],
+            // }),
         ]);
 
         // Outputs:

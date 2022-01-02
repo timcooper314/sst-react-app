@@ -1,4 +1,5 @@
-import InfrastructureStack from "./InfrastructureStack";
+import StorageStack from "./StorageStack";
+import ApiStack from "./ApiStack";
 import FrontendStack from "./FrontendStack";
 
 export default function main(app) {
@@ -7,9 +8,13 @@ export default function main(app) {
     runtime: "python3.8",
   });
 
-  const infraStack = new InfrastructureStack(app, "infrastructure");
+  const storageStack = new StorageStack(app, "storage")
 
-  new FrontendStack(app, "frontend", {
-    api: infraStack.api,
+  const apiStack = new ApiStack(app, "api", {
+    bucket: storageStack.bucket,
   });
+
+  // new FrontendStack(app, "frontend", {
+  //   api: apiStack.api,
+  // });
 }
