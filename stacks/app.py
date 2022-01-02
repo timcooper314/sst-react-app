@@ -2,7 +2,7 @@
 import os
 
 from aws_cdk import core as cdk
-from infrastructure.infrastructure_stack import InfrastructureStack
+from stacks.infrastructure_stack import InfrastructureStack
 
 
 app = cdk.App()
