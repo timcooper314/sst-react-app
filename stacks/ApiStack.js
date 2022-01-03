@@ -1,7 +1,7 @@
 import * as sst from "@serverless-stack/resources";
-// import * as iam from "@aws-cdk/aws-iam";
+import * as iam from "@aws-cdk/aws-iam";
 
-export default class InfrastructureStack extends sst.Stack {
+export default class ApiStack extends sst.Stack {
     // Public references:
     api;
 
@@ -12,6 +12,7 @@ export default class InfrastructureStack extends sst.Stack {
 
         // API resources: (cors enabled by default)
         this.api = new sst.Api(this, "Api", {
+            defaultAuthorizationType: "AWS_IAM",
             defaultFunctionProps: {
                 srcPath: "src",
                 environment: {
