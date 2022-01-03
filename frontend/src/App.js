@@ -1,48 +1,29 @@
-import { useState, useEffect } from 'react'
-import Header from './components/Header'
-import Tracks from './components/Tracks'
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import { LinkContainer } from "react-router-bootstrap";
+import Routes from "./Routes";
 
-
-const App = () => {
-  const [showTracks, setShowTracks] = useState(false)
-  const [tracks, setTracks] = useState([])
-
-  useEffect(() => {
-    const getTracks = async () => {
-      const tracksFromCloud = await fetchTracks()
-      setTracks(tracksFromCloud)
-    }
-    getTracks()
-  }, [])
-
-  const fetchTracks = async () => {
-    console.log("Fetching data...")
-    //console.log(process.env.REACT_APP_TRACKS_DATA_ENDPOINT)
-    //const res = await fetch(process.env.REACT_APP_TRACKS_DATA_ENDPOINT)
-    //     "https://ty7o2tnjk7.execute-api.ap-southeast-2.amazonaws.com/prod/")
-    // const data = await res.json()
-    // return data
-    return [{
-      id: 1,
-      artist: "artist_x",
-      track: "track_x"
-    },
-    {
-      id: 2,
-      artist: "artist_y",
-      track: "track_y"
-    }
-    ]
-  }
+export default function App() {
   return (
-    <div className="container">
-      <Header
-        onAdd={() => setShowTracks(!showTracks)}
-        showAdd={showTracks}
-      />
-      {showTracks && <Tracks tracks={tracks} />}
+    <div className="App container py-3">
+      <Navbar collapseOnSelect bg="light" expand="md" className="mb-3">
+        <LinkContainer to="/">
+          <Navbar.Brand className="font-weight-bold text-muted">
+            Home
+          </Navbar.Brand>
+        </LinkContainer>
+        <Navbar.Toggle />
+        <Navbar.Collapse className="justify-content-end">
+          <Nav activeKey={window.location.pathname}>
+            <LinkContainer to="tracks">
+              <Nav.Link>Tracks</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="artists">
+              <Nav.Link>Artists</Nav.Link>
+            </LinkContainer>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+      <Routes />
     </div>
   );
-}
-
-export default App;

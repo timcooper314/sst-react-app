@@ -39,11 +39,11 @@ code {
   border: 1px solid steelblue;
   padding: 30px;
   border-radius: 5px;
-  background: #0489C1
+  background: #ffffff
 }
 
 .track {
-  background: #f4f4f4;
+  background: #e8e8e8;
   margin: 5px;
   padding: 2px 20px;
   cursor: pointer;
