@@ -1,10 +1,10 @@
 import React from "react";
 import { useState, useEffect } from 'react';
 import Header from './../components/Header';
-import Tracks from './../components/Tracks';
+import TracksList from './../components/TracksList';
 import { API } from "aws-amplify";
 
-export default function TracksContainer() {
+export default function Tracks() {
     const [showTracks, setShowTracks] = useState(false);
     const [tracks, setTracks] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +31,7 @@ export default function TracksContainer() {
                 showAdd={showTracks}
                 isLoading={isLoading}
             />
-            {showTracks && <Tracks tracks={tracks} />}
+            {showTracks && <TracksList tracks={tracks} />}
         </div>
     );
 }

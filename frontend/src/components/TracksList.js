@@ -2,13 +2,13 @@ import React from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 
 
-const Tracks = ({ tracks }) => {
+const TracksList = ({ tracks }) => {
     return (
         <>
-            {tracks.map((track) => (
+            {tracks.map((track, index) => (
                 <ListGroup.Item action>
                     <span className="font-weight-bold">
-                        {track.track}
+                        {index + 1 + ". " + track.track}
                     </span>
                     <br />
                     <span className="text-muted">
@@ -21,4 +21,4 @@ const Tracks = ({ tracks }) => {
 }
 
 
-export default Tracks
+export default TracksList

@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Home from "./containers/Home";
-import TracksContainer from "./containers/TracksContainer";
+import Tracks from "./containers/Tracks";
 import Login from "./containers/Login";
 
 export default function Routes() {
@@ -14,7 +14,7 @@ export default function Routes() {
                 <Login />
             </Route>
             <Route exact path="/tracks">
-                <TracksContainer />
+                <Tracks />
             </Route>
         </Switch>
     );
