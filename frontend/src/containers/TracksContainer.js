@@ -5,20 +5,23 @@ import Tracks from './../components/Tracks';
 import { API } from "aws-amplify";
 
 export default function TracksContainer() {
-    const [showTracks, setShowTracks] = useState(false)
-    const [tracks, setTracks] = useState([])
+    const [showTracks, setShowTracks] = useState(false);
+    const [tracks, setTracks] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const getTracks = async () => {
             const tracksFromCloud = await fetchTracks()
             setTracks(tracksFromCloud)
+            setIsLoading(false);
         }
         getTracks()
-    }, [])
+    }, []);
 
     const fetchTracks = async () => {
         console.log("Fetching data...")
-        return API.get("tracks", "/tracks")
+        setIsLoading(true);
+        return API.get("tracks", "/tracks");
     }
 
     return (
@@ -26,6 +29,7 @@ export default function TracksContainer() {
             <Header
                 onAdd={() => setShowTracks(!showTracks)}
                 showAdd={showTracks}
+                isLoading={isLoading}
             />
             {showTracks && <Tracks tracks={tracks} />}
         </div>

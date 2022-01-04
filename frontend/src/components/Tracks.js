@@ -1,13 +1,22 @@
-import Track from './Track'
+import React from "react";
+import ListGroup from "react-bootstrap/ListGroup";
 
 
-const Tracks = ({tracks}) => {
+const Tracks = ({ tracks }) => {
     return (
-    <>
-        {tracks.map((track) => (
-            <Track key={track.id} track={track}/>
-        ))}
-    </>
+        <>
+            {tracks.map((track) => (
+                <ListGroup.Item action>
+                    <span className="font-weight-bold">
+                        {track.track}
+                    </span>
+                    <br />
+                    <span className="text-muted">
+                        {track.artist}
+                    </span>
+                </ListGroup.Item>
+            ))}
+        </>
     )
 }
 
