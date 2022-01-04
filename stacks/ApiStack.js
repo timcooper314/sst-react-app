@@ -16,19 +16,20 @@ export default class ApiStack extends sst.Stack {
             defaultFunctionProps: {
                 srcPath: "src",
                 environment: {
-                    STAGING_BUCKET_NAME: bucket.bucketName,  // process.env.STAGING_BUCKET_NAME,
+                    STAGING_BUCKET_NAME: process.env.STAGING_BUCKET_NAME,  // bucket.bucketName,
                 },
             },
             routes: {
                 "GET /tracks": "get_tracks.main",
             }
         });
-        this.api.attachPermissions([bucket
-            // new iam.PolicyStatement({
-            //     actions: ["s3:*"],
-            //     effect: iam.Effect.ALLOW,
-            //     resources: ["arn:aws:s3:::datalakestack-stagingdataec9fbd02-ejw4ydpkx3ap/*"],
-            // }),
+        this.api.attachPermissions([bucket,
+            new iam.PolicyStatement({
+                actions: ["s3:*"],
+                effect: iam.Effect.ALLOW,
+                resources: ["arn:aws:s3:::datalakestack-stagingdataec9fbd02-ejw4ydpkx3ap",
+                    "arn:aws:s3:::datalakestack-stagingdataec9fbd02-ejw4ydpkx3ap/*"],
+            }),
         ]);
 
         // Outputs:

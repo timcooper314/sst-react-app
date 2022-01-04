@@ -15,12 +15,14 @@ export default function main(app) {
     bucket: storageStack.bucket,
   });
 
-  new AuthStack(app, "auth", {
+  const authStack = new AuthStack(app, "auth", {
     api: apiStack.api,
     bucket: storageStack.bucket,
   });
 
-  // new FrontendStack(app, "frontend", {
-  //   api: apiStack.api,
-  // });
+  new FrontendStack(app, "frontend", {
+    bucket: storageStack.bucket,
+    api: apiStack.api,
+    auth: authStack.auth,
+  });
 }
