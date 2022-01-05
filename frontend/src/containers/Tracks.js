@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from 'react';
-import Header from './../components/Header';
-import TracksList from './../components/TracksList';
+import Header from '../components/Header';
+import TracksList from '../components/TracksList';
 import { API } from "aws-amplify";
 
 export default function Tracks() {
