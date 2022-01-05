@@ -1,5 +1,5 @@
-import StorageStack from "./StorageStack";
 import ApiStack from "./ApiStack";
+import AuthStack from "./AuthStack";
 import FrontendStack from "./FrontendStack";
 
 export default function main(app) {
@@ -8,13 +8,14 @@ export default function main(app) {
     runtime: "python3.8",
   });
 
-  const storageStack = new StorageStack(app, "storage")
+  const apiStack = new ApiStack(app, "api");
 
-  const apiStack = new ApiStack(app, "api", {
-    bucket: storageStack.bucket,
+  const authStack = new AuthStack(app, "auth", {
+    api: apiStack.api,
   });
 
-  // new FrontendStack(app, "frontend", {
-  //   api: apiStack.api,
-  // });
+  new FrontendStack(app, "frontend", {
+    api: apiStack.api,
+    auth: authStack.auth,
+  });
 }

@@ -1,48 +1,78 @@
-import { useState, useEffect } from 'react'
-import Header from './components/Header'
-import Tracks from './components/Tracks'
+import React, { useState, useEffect } from "react";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import { LinkContainer } from "react-router-bootstrap";
+import Routes from "./Routes";
+import { AppContext } from "./lib/contextLib";
+import { Auth } from "aws-amplify";
+import { useHistory } from "react-router-dom";
 
-
-const App = () => {
-  const [showTracks, setShowTracks] = useState(false)
-  const [tracks, setTracks] = useState([])
+export default function App() {
+  const history = useHistory();
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const [isAuthenticated, userHasAuthenticated] = useState(false);
 
   useEffect(() => {
-    const getTracks = async () => {
-      const tracksFromCloud = await fetchTracks()
-      setTracks(tracksFromCloud)
+    onLoad();
+  }, []);
+  async function onLoad() {
+    try {
+      await Auth.currentSession();
+      userHasAuthenticated(true);
     }
-    getTracks()
-  }, [])
-
-  const fetchTracks = async () => {
-    console.log("Fetching data...")
-    //console.log(process.env.REACT_APP_TRACKS_DATA_ENDPOINT)
-    //const res = await fetch(process.env.REACT_APP_TRACKS_DATA_ENDPOINT)
-    //     "https://ty7o2tnjk7.execute-api.ap-southeast-2.amazonaws.com/prod/")
-    // const data = await res.json()
-    // return data
-    return [{
-      id: 1,
-      artist: "artist_x",
-      track: "track_x"
-    },
-    {
-      id: 2,
-      artist: "artist_y",
-      track: "track_y"
+    catch (err) {
+      if (err !== 'No current user') {
+        alert(err);
+      }
     }
-    ]
+    setIsAuthenticating(false);
+  }
+  async function handleLogout() {
+    await Auth.signOut();
+    userHasAuthenticated(false);
+    history.push("/")
   }
   return (
-    <div className="container">
-      <Header
-        onAdd={() => setShowTracks(!showTracks)}
-        showAdd={showTracks}
-      />
-      {showTracks && <Tracks tracks={tracks} />}
-    </div>
+    !isAuthenticating && (
+      <div className="App container py-3">
+        <Navbar collapseOnSelect bg="light" expand="md" className="mb-3">
+          <LinkContainer to="/">
+            <Navbar.Brand className="font-weight-bold text-muted">
+              Home
+            </Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle />
+          <Navbar.Collapse className="justify-content-end">
+            <Nav activeKey={window.location.pathname}>
+              {isAuthenticated ? (
+                <>
+                  <LinkContainer to="tracks">
+                    <Nav.Link>Tracks</Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer to="artists">
+                    <Nav.Link>Artists</Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer to="/">
+                    <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+                  </LinkContainer>
+                </>
+              ) : (
+                <>
+                  <LinkContainer to="signup">
+                    <Nav.Link>Signup</Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer to="login">
+                    <Nav.Link>Login</Nav.Link>
+                  </LinkContainer>
+                </>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
+          <Routes />
+        </AppContext.Provider>
+      </div>
+    )
   );
 }
-
-export default App;
