@@ -4,33 +4,32 @@ from datetime import datetime
 import boto3
 
 
-class GetTracksData:
+class GetArtistsData:
     def __init__(self):
         self.s3 = boto3.client("s3")
-        self.tracks_data_bucket_name = os.getenv("STAGING_BUCKET_NAME")
+        self.bucket_name = os.getenv("STAGING_BUCKET_NAME")
 
     def get_latest_s3_key(self):
         bucket_objects = self.s3.list_objects_v2(
-            Bucket=self.tracks_data_bucket_name,
-            Prefix="spotify/tracks/"
+            Bucket=self.bucket_name,
+            Prefix="spotify/artists/"
         )
         return max(bucket_objects["Contents"], key=lambda x: x["LastModified"])["Key"]
 
     def get_s3_data(self, key):
-        s3_obj = self.s3.get_object(Key=key, Bucket=self.tracks_data_bucket_name)
+        s3_obj = self.s3.get_object(Key=key, Bucket=self.bucket_name)
         return json.loads(s3_obj["Body"].read())
 
     def process_s3_data(self, s3_obj):
         return [
             {
                 "id": int(key),
-                "artist": val[list(val.keys())[0]],
-                "track": list(val.keys())[0],
+                "artist": val,
             }
             for key, val in s3_obj.items()
         ]
 
-    def get_tracks_data(self):
+    def get_artists_data(self):
         s3_key = self.get_latest_s3_key()
         s3_obj = self.get_s3_data(s3_key)
         processed_data = self.process_s3_data(s3_obj)
@@ -38,7 +37,7 @@ class GetTracksData:
 
 
 def main(event, context):
-    tracks_data = GetTracksData().get_tracks_data()
+    artists_data = GetArtistsData().get_artists_data()
     return {
         "statusCode": 200,
         "headers": {
@@ -47,6 +46,6 @@ def main(event, context):
             "Access-Control-Allow-Methods": "OPTIONS,GET",
         },
         "body": json.dumps(
-            tracks_data
+            artists_data
         ),
     }

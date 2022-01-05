@@ -7,15 +7,10 @@ import { Amplify } from 'aws-amplify';
 import config from './config';
 
 Amplify.configure({
-  // Storage: {
-  //   region: config.region,
-  //   bucket: config.s3.BUCKET,
-  //   identityPoolId: config.cognito.IDENTITY_POOL_ID,
-  // },
   API: {
     endpoints: [
       {
-        name: "tracks",
+        name: "topmusic",
         endpoint: config.apiGateway.URL,
         region: config.region
       },
