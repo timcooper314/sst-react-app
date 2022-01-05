@@ -8,7 +8,7 @@ export default class AuthStack extends sst.Stack {
     constructor(scope, id, props) {
         super(scope, id, props);
 
-        const { api, bucket } = props;
+        const { api } = props;
 
         // Create a Cognito User pool and Identity Pool:
         this.auth = new sst.Auth(this, "auth", {
@@ -26,8 +26,9 @@ export default class AuthStack extends sst.Stack {
                 actions: ["s3:List*", "s3:Get*"],
                 effect: iam.Effect.ALLOW,
                 resources: [
-                    bucket.bucketArn + "/*",
-                    bucket.bucketArn + "/private/${cognito-identity.amazonaws.com:sub}/*",
+                    process.env.STAGING_BUCKET_ARN + "/*",
+                    // bucket.bucketArn + "/*",
+                    // bucket.bucketArn + "/private/${cognito-identity.amazonaws.com:sub}/*",
                 ],
             })
         ]);

@@ -1,9 +1,6 @@
 const config = {
     // Backend config
     region: process.env.REACT_APP_REGION,
-    s3: {
-        BUCKET: process.env.REACT_APP_BUCKET,
-    },
     apiGateway: {
         URL: process.env.REACT_APP_API_URL,
     },
