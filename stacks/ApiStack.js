@@ -18,7 +18,8 @@ export default class ApiStack extends sst.Stack {
                 },
             },
             routes: {
-                "GET /tracks": "get_tracks.main",
+                "GET /topmusic/tracks": "get_tracks.main",
+                "GET /topmusic/artists": "get_artists.main",
             }
         });
         this.api.attachPermissions([

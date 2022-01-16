@@ -21,12 +21,13 @@ export default function Tracks() {
     const fetchTracks = async () => {
         console.log("Fetching data...")
         setIsLoading(true);
-        return API.get("tracks", "/tracks");
+        return API.get("topmusic", "/topmusic/tracks");
     }
 
     return (
         <div className="container">
             <Header
+                endpointText={"Tracks"}
                 onAdd={() => setShowTracks(!showTracks)}
                 showAdd={showTracks}
                 isLoading={isLoading}
