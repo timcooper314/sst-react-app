@@ -1,5 +1,6 @@
 import * as sst from "@serverless-stack/resources";
 import * as iam from "@aws-cdk/aws-iam";
+import * as cdk from "@aws-cdk/core";
 
 export default class AuthStack extends sst.Stack {
     // Public references:
@@ -18,6 +19,7 @@ export default class AuthStack extends sst.Stack {
                 },
             },
         });
+        const stagingBucketArn = cdk.Fn.importValue("dev-api-ingestion-raw-bucket-arn");
 
         // Grant access for authenticated users to the api and s3 bucket
         this.auth.attachPermissionsForAuthUsers([
@@ -26,7 +28,7 @@ export default class AuthStack extends sst.Stack {
                 actions: ["s3:List*", "s3:Get*"],
                 effect: iam.Effect.ALLOW,
                 resources: [
-                    process.env.STAGING_BUCKET_ARN + "/*",
+                    stagingBucketArn.toString() + "/*",
                     // bucket.bucketArn + "/*",
                     // bucket.bucketArn + "/private/${cognito-identity.amazonaws.com:sub}/*",
                 ],
