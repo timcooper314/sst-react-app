@@ -27,20 +27,22 @@ export default function Tracks() {
         setIsLoading(true);
         return API.get("topmusic", "/topmusic/tracks/dates");
     }
-
+    // Refetch tracks when selectedDate changes
     useEffect(() => {
-        const getTracks = async () => {
-            const tracksFromCloud = await fetchTracks()
+        setSelectedDate(selectedDate)
+        console.log("Selected date: " + selectedDate)
+        const getTracks = async (date) => {
+            const tracksFromCloud = await fetchTracks(date)
             setTracks(tracksFromCloud)
             setIsLoading(false);
         }
-        getTracks()
-    }, []);
+        getTracks(selectedDate)
+    }, [selectedDate]);
 
-    const fetchTracks = async () => {
-        console.log("Fetching data...")
+    const fetchTracks = async (date) => {
+        console.log("Fetching data for date " + date + "...")
         setIsLoading(true);
-        return API.get("topmusic", "/topmusic/tracks");
+        return API.get("topmusic", "/topmusic/tracks/" + date);
     }
 
     return (
