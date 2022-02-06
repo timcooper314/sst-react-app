@@ -4,19 +4,20 @@ from datetime import datetime
 import boto3
 
 
-class GetTrackDatesData:
+class GetDatesData:
     def __init__(self):
         self.s3 = boto3.client("s3")
-        self.tracks_data_bucket_name = os.getenv("STAGING_BUCKET_NAME")
+        self.raw_data_bucket_name = os.getenv("STAGING_BUCKET_NAME")
 
-    def get_s3_objects_list(self):
+    def get_s3_objects_list(self, endpoint):
         bucket_objects = self.s3.list_objects_v2(
-            Bucket=self.tracks_data_bucket_name, Prefix="spotify/tracks/"
+            Bucket=self.raw_data_bucket_name, Prefix=f"spotify/{endpoint}/"
         )
         return bucket_objects["Contents"]
 
-    def get_track_dates_data(self):
-        s3_objects = self.get_s3_objects_list()
+    def get_dates_data(self, event):
+        endpoint_type = event.get("pathParameters", {}).get("type")  # tracks or artists
+        s3_objects = self.get_s3_objects_list(endpoint_type)
         s3_dates_list = []
         for obj in s3_objects:
             s3_key = obj["Key"]
@@ -32,7 +33,7 @@ class GetTrackDatesData:
 
 
 def main(event, context):
-    track_dates_data = GetTrackDatesData().get_track_dates_data()
+    dates_data = GetDatesData().get_dates_data(event)
     return {
         "statusCode": 200,
         "headers": {
@@ -40,5 +41,5 @@ def main(event, context):
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,GET",
         },
-        "body": json.dumps(track_dates_data),
+        "body": json.dumps(dates_data),
     }

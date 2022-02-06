@@ -25,7 +25,7 @@ export default function Tracks() {
     const fetchTrackDates = async () => {
         console.log("Fetching track dates data...")
         setIsLoading(true);
-        return API.get("topmusic", "/topmusic/tracks/dates");
+        return API.get("topmusic", "/topmusic/dates/tracks");
     }
     // Refetch tracks when selectedDate changes
     useEffect(() => {
