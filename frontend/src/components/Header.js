@@ -2,7 +2,8 @@ import LoadingButton from './LoadingButton'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 
-const Header = ({ endpointText, onAdd, showAdd, isLoading, datesList, onDateSelect, selectedDate }) => {
+const Header = ({ endpointText, onAdd, showAdd, isLoading, datesList, onDateSelect, selectedDate, onTimeRangeSelect, selectedTimeRange }) => {
+    const timeRangeList = ["short_term", "medium_term", "long_term"]
     return (
         <header>
             <h1>{"Top " + endpointText}</h1>
@@ -26,8 +27,24 @@ const Header = ({ endpointText, onAdd, showAdd, isLoading, datesList, onDateSele
                         </Dropdown.Item>
                     )
                 )}
-            </DropdownButton >
+            </DropdownButton>
             <p> {selectedDate} </p>
+            <DropdownButton
+                id="dropdown-basic-button"
+                title="Time Range"
+                onSelect={onTimeRangeSelect}>
+                {(timeRangeList).map(
+                    (variant) => (
+                        <Dropdown.Item
+                            id={`dropdown-split-variants-${variant}`}
+                            key={`dropdown-split-variants-${variant}`}
+                            eventKey={variant}>
+                            {variant}
+                        </Dropdown.Item>
+                    )
+                )}
+            </DropdownButton >
+            <p> {selectedTimeRange} </p>
         </header>
     )
 }

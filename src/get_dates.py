@@ -9,15 +9,16 @@ class GetDatesData:
         self.s3 = boto3.client("s3")
         self.raw_data_bucket_name = os.getenv("STAGING_BUCKET_NAME")
 
-    def get_s3_objects_list(self, endpoint):
+    def get_s3_objects_list(self, endpoint, time_range):
         bucket_objects = self.s3.list_objects_v2(
-            Bucket=self.raw_data_bucket_name, Prefix=f"spotify/{endpoint}/"
+            Bucket=self.raw_data_bucket_name, Prefix=f"spotify/{endpoint}/{time_range}/"
         )
         return bucket_objects["Contents"]
 
     def get_dates_data(self, event):
         endpoint_type = event.get("pathParameters", {}).get("type")  # tracks or artists
-        s3_objects = self.get_s3_objects_list(endpoint_type)
+        time_range = event.get("pathParameters", {}).get("time_range")
+        s3_objects = self.get_s3_objects_list(endpoint_type, time_range)
         s3_dates_list = []
         for obj in s3_objects:
             s3_key = obj["Key"]
