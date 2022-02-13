@@ -7,42 +7,47 @@ import { API } from "aws-amplify";
 export default function Artists() {
     const [artistDates, setArtistDates] = useState([]);
     const [selectedDate, setSelectedDate] = useState(artistDates[0]);
+    const [selectedTimeRange, setSelectedTimeRange] = useState("short_term")
     const [showArtists, setShowArtists] = useState(false);
     const [artists, setArtists] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    // Get the dates only once:
+    // Refetch the dates when selectedTimeRange changes:
     useEffect(() => {
-        const getArtistDates = async () => {
-            const artistDatesFromCloud = await fetchArtistDates()
+        const getArtistDates = async (timeRange) => {
+            const artistDatesFromCloud = await fetchArtistDates(timeRange)
             setArtistDates(artistDatesFromCloud)
             console.log("Setting default date: " + artistDatesFromCloud[0])
             setSelectedDate(artistDatesFromCloud[0])
         }
-        getArtistDates()
-    }, []);
+        getArtistDates(selectedTimeRange)
+    }, [selectedTimeRange]);
 
-    const fetchArtistDates = async () => {
-        console.log("Fetching artist dates data...")
+    const fetchArtistDates = async (timeRange) => {
+        console.log("Fetching artist dates data for time range " + timeRange)
         setIsLoading(true);
-        return API.get("topmusic", "/topmusic/dates/artists");
+        const endpoint = "/topmusic/dates/artists/" + timeRange
+        console.log("Hitting endpoint " + endpoint)
+        return API.get("topmusic", endpoint);
     }
 
     // Refetch artists when selectedDate changes
     useEffect(() => {
         console.log("Selected date: " + selectedDate)
-        const getArtists = async (date) => {
-            const artistsFromCloud = await fetchArtists(date)
+        console.log("Selected time range: " + selectedTimeRange)
+        const getArtists = async (date, timeRange) => {
+            const artistsFromCloud = await fetchArtists(date, timeRange)
             setArtists(artistsFromCloud)
             setIsLoading(false);
         }
-        getArtists(selectedDate)
-    }, [selectedDate]);
+        getArtists(selectedDate, selectedTimeRange)
+    }, [selectedDate, selectedTimeRange]);
 
-    const fetchArtists = async (date) => {
-        console.log("Fetching data for date " + date + "...")
+    const fetchArtists = async (date, timeRange) => {
         setIsLoading(true);
-        return API.get("topmusic", "/topmusic/artists/" + date);
+        const endpoint = "/topmusic/artists/"+ timeRange + "/" + date
+        console.log("Hitting endpoint " + endpoint)
+        return API.get("topmusic", endpoint);
     }
 
     return (
@@ -55,6 +60,8 @@ export default function Artists() {
                 datesList={artistDates}
                 onDateSelect={(date) => setSelectedDate(date)}
                 selectedDate={selectedDate}
+                onTimeRangeSelect={(timeRange) => setSelectedTimeRange(timeRange)}
+                selectedTimeRange={selectedTimeRange}
             />
             {showArtists && <ArtistsList artists={artists} />}
         </div>
