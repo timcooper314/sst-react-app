@@ -22,9 +22,9 @@ export default class ApiStack extends sst.Stack {
                 },
             },
             routes: {
-                "GET /topmusic/tracks/{date}": "get_tracks.main",
-                "GET /topmusic/artists/{date}": "get_artists.main",
-                "GET /topmusic/dates/{type}": "get_dates.main",
+                "GET /topmusic/tracks/{time_range}/{date}": "get_tracks.main",
+                "GET /topmusic/artists/{time_range}/{date}": "get_artists.main",
+                "GET /topmusic/dates/{type}/{time_range}": "get_dates.main",
             }
         });
         this.api.attachPermissions([
